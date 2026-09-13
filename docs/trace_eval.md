@@ -1,8 +1,10 @@
 # 📊 BÁO CÁO THU HOẠCH NGHIỆM THU BÀI LAB 3 (BƯỚC 3 — SUBMISSION ARTIFACT)
 
 > **Họ và Tên Học viên:** Ngô Lê Thùy Tiên
+>
 > **Mã Sinh Viên / Mã Học viên:** 2A202602614
-> **Chủ đề Lựa chọn:** Gợi ý 4.1 — Trợ lý Tuyển dụng & Sàng lọc CV (Tra cứu tiêu chí tuyển dụng vị trí & gửi thông báo lịch phỏng vấn)
+>
+> **Chủ đề Lựa chọn:** Trợ lý Tuyển dụng & Sàng lọc CV (Tra cứu tiêu chí tuyển dụng vị trí & gửi thông báo lịch phỏng vấn)
 
 ---
 
