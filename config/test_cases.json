@@ -16,21 +16,21 @@
   {
     "id": "TC03",
     "type": "action_tool_query",
-    "question": "TODO: [Học viên tự viết câu hỏi yêu cầu Agent gửi thư mời phỏng vấn cho một ứng viên]",
+    "question": "Hãy gửi thư mời phỏng vấn cho ứng viên UV2026003 vào lúc 14:00 22/09/2026.",
     "expected_behavior": "Agent tự động phát sinh Tool Call 'send_interview_invite' với đúng candidate_id và datetime_str trích xuất từ câu hỏi.",
     "complexity": "Medium"
   },
   {
     "id": "TC04",
     "type": "multi_step_reasoning",
-    "question": "TODO: [Học viên tự viết câu hỏi yêu cầu Agent suy luận ReAct đa bước (Tra cứu vị trí -> Mời phỏng vấn với đúng Hiring Manager)]",
+    "question": "Hãy tra cứu tiêu chí tuyển dụng của vị trí JD-DS-002, sau đó gửi thư mời phỏng vấn cho ứng viên UV2026002 vào lúc 10:00 21/09/2026 với đúng Hiring Manager phụ trách vị trí đó.",
     "expected_behavior": "Agent thực hiện chuỗi ReAct đa bước: gọi 'job_requirements_query' lấy hiring_manager trước, rồi nạp Observation đó vào tham số interviewer_name của 'send_interview_invite'.",
     "complexity": "High"
   },
   {
     "id": "TC05",
     "type": "edge_case_handling",
-    "question": "TODO: [Học viên tự viết câu hỏi tra cứu mã tin tuyển dụng không tồn tại (ví dụ JD-XX-999)]",
+    "question": "Tra cứu giúp tôi tiêu chí tuyển dụng của vị trí có mã JD-XX-999.",
     "expected_behavior": "Agent nhận kết quả NOT_FOUND từ Tool và phản hồi lịch sự, gợi ý các mã hợp lệ, tuyệt đối không bịa đặt dữ liệu tuyển dụng.",
     "complexity": "Medium"
   }
