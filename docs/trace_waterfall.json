@@ -4,8 +4,8 @@
     "query": "Chào bạn, quy trình tuyển dụng tại Tập đoàn VinGroup thường gồm những vòng nào?",
     "action_type": "FINAL_ANSWER",
     "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
-    "output": "Chào bạn, quy trình tuyển dụng tại Tập đoàn VinGroup thường được thiết kế chuyên nghiệp và bài bản để đảm bảo tìm kiếm được những ứng viên phù hợp nhất. Thông thường, quy trình sẽ bao gồm các vòng chính sau đây:\n\n1.  **Sàng lọc hồ sơ (CV Screening):** Bộ phận tuyển dụng sẽ đánh giá hồ sơ của bạn dựa trên các tiêu chí về kinh nghiệm, kỹ năng và bằng cấp so với yêu cầu của vị trí ứng tuyển.\n2.  **Phỏng vấn sơ loại (Sơ tuyển):** Thường được thực hiện qua điện thoại hoặc trực tuyến để xác nhận thông tin cơ bản, mức độ quan tâm và sự phù hợp về văn hóa.\n3.  **Phỏng vấn chuyên môn (Hiring Manager Interview):** Đây là vòng quan trọng nhất, nơi bạn sẽ trao đổi trực tiếp với quản lý trực tiếp (Hiring Manager) của bộ phận tuyển dụng để đánh giá sâu về năng lực chuyên môn và khả năng giải quyết vấn đề.\n4.  **Kiểm tra năng lực/Kỹ năng (nếu có):** Tùy vào vị trí (ví dụ: kỹ thuật, IT, thiết kế...), bạn có thể được yêu cầu làm bài test chuyên môn hoặc bài tập tình huống.\n5.  **Phỏng vấn vòng cuối (Final Interview):** Thường là phỏng vấn với lãnh đạo cấp cao hơn hoặc bộ phận Nhân sự để thảo luận về định hướng phát triển, văn hóa doanh nghiệp và các thỏa thuận công việc.\n6.  **Thông báo kết quả và Thư mời làm việc (Offer Letter):** Sau khi hoàn tất các vòng, ứng viên đạt yêu cầu sẽ nhận được thư mời làm việc chính thức từ VinGroup.\n\nNếu bạn đang quan tâm đến một vị trí cụ thể nào đó, bạn có thể cung cấp **mã tin tuyển dụng (job_code)**, tôi sẽ hỗ trợ bạn tra cứu chi tiết các yêu cầu cụ thể cho vị trí đó!",
-    "latency_ms": 2970.01,
+    "output": "Chào bạn, quy trình tuyển dụng tại Tập đoàn VinGroup thường được thiết kế chuyên nghiệp và bài bản để đảm bảo tìm kiếm được những ứng viên phù hợp nhất. Thông thường, quy trình này bao gồm các vòng chính sau:\n\n1.  **Sàng lọc hồ sơ (CV Screening):** Bộ phận tuyển dụng sẽ đánh giá hồ sơ của bạn dựa trên các tiêu chí về kinh nghiệm, kỹ năng và bằng cấp so với yêu cầu của vị trí ứng tuyển.\n2.  **Phỏng vấn sơ bộ (Initial Interview):** Thường được thực hiện qua điện thoại hoặc trực tuyến bởi bộ phận Nhân sự để xác nhận thông tin cơ bản, mức độ quan tâm và sự phù hợp về văn hóa.\n3.  **Phỏng vấn chuyên môn (Technical/Functional Interview):** Đây là vòng quan trọng nhất, bạn sẽ làm việc trực tiếp với Hiring Manager (Quản lý trực tiếp) hoặc các chuyên gia trong lĩnh vực đó để đánh giá năng lực chuyên môn, khả năng giải quyết vấn đề và tư duy công việc.\n4.  **Bài kiểm tra năng lực/tính cách (nếu có):** Tùy vào đặc thù vị trí, ứng viên có thể được yêu cầu thực hiện các bài test chuyên môn hoặc đánh giá tính cách (như bài test IQ, EQ, hoặc bài tập tình huống).\n5.  **Phỏng vấn cuối cùng (Final Interview):** Có thể là phỏng vấn với cấp quản lý cao hơn hoặc Ban lãnh đạo để chốt các thỏa thuận cuối cùng.\n6.  **Thông báo kết quả và Thư mời làm việc (Offer Letter):** Sau khi vượt qua các vòng phỏng vấn, bộ phận tuyển dụng sẽ gửi thư mời làm việc chính thức với các thông tin chi tiết về đãi ngộ và lộ trình hội nhập.\n\nMỗi vị trí có thể có những điều chỉnh nhỏ tùy thuộc vào tính chất công việc. Nếu bạn đang quan tâm đến một vị trí cụ thể nào đó, hãy cung cấp mã tin tuyển dụng (job_code), tôi có thể hỗ trợ bạn tra cứu chi tiết yêu cầu của vị trí đó!",
+    "latency_ms": 4688.16,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -38,7 +38,7 @@
         "hiring_manager": "TS. Trần Minh Quang"
       }
     },
-    "latency_ms": 2974.77,
+    "latency_ms": 1328.25,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -47,7 +47,7 @@
     "action_type": "FINAL_ANSWER",
     "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
     "output": "Dưới đây là thông tin chi tiết về tiêu chí tuyển dụng cho vị trí **Kỹ sư Trí tuệ Nhân tạo (AI Engineer)** với mã **JD-AI-001**:\n\n*   **Vị trí:** Kỹ sư Trí tuệ Nhân tạo (AI Engineer)\n*   **Phòng ban:** Khối Công nghệ AI - VinAI\n*   **Cấp bậc:** Middle\n*   **Số lượng cần tuyển:** 3\n*   **Mức lương:** 25.000.000 - 40.000.000 VNĐ\n*   **Yêu cầu bằng cấp:** Tốt nghiệp Đại học chuyên ngành CNTT / Khoa học Máy tính trở lên\n*   **Số năm kinh nghiệm tối thiểu:** 2 năm\n*   **Kỹ năng yêu cầu:** Python, PyTorch, Computer Vision, MLOps cơ bản\n*   **Người phụ trách phỏng vấn (Hiring Manager):** TS. Trần Minh Quang\n*   **Trạng thái:** Đang tuyển",
-    "latency_ms": 4810.78,
+    "latency_ms": 4472.51,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -69,7 +69,7 @@
       "channel": "Email + SMS",
       "message": "Đã gửi thư mời phỏng vấn thành công tới ứng viên UV2026003 vào lúc 14:00 22/09/2026, người phỏng vấn: Hội đồng Tuyển dụng VinGroup."
     },
-    "latency_ms": 2714.43,
+    "latency_ms": 4202.57,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -77,8 +77,8 @@
     "query": "Hãy gửi thư mời phỏng vấn cho ứng viên UV2026003 vào lúc 14:00 22/09/2026.",
     "action_type": "FINAL_ANSWER",
     "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
-    "output": "Thư mời phỏng vấn cho ứng viên **UV2026003** đã được gửi thành công.\n\n**Thông tin chi tiết:**\n*   **Thời gian:** 14:00 ngày 22/09/2026\n*   **Người phỏng vấn:** Hội đồng Tuyển dụng VinGroup\n*   **Mã thư mời:** INV-UV2026003-2026\n*   **Trạng thái:** Đã gửi qua Email và SMS.",
-    "latency_ms": 4287.15,
+    "output": "Thư mời phỏng vấn đã được gửi thành công tới ứng viên **UV2026003**.\n\n**Thông tin chi tiết:**\n*   **Thời gian:** 14:00 ngày 22/09/2026.\n*   **Người phỏng vấn:** Hội đồng Tuyển dụng VinGroup.\n*   **Mã thư mời:** INV-UV2026003-2026.\n*   **Trạng thái:** Đã gửi qua Email và SMS.",
+    "latency_ms": 4320.6,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -111,18 +111,18 @@
         "hiring_manager": "Ms. Nguyễn Thu Hà"
       }
     },
-    "latency_ms": 8199.02,
+    "latency_ms": 4555.78,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
     "step": 2,
     "query": "Hãy tra cứu tiêu chí tuyển dụng của vị trí JD-DS-002, sau đó gửi thư mời phỏng vấn cho ứng viên UV2026002 vào lúc 10:00 21/09/2026 với đúng Hiring Manager phụ trách vị trí đó.",
     "action_type": "TOOL_EXECUTION",
-    "thought": "Gemini quyết định gọi công cụ 'send_interview_invite' với tham số: {\"datetime_str\": \"10:00 21/09/2026\", \"candidate_id\": \"UV2026002\", \"interviewer_name\": \"Ms. Nguyễn Thu Hà\"}",
+    "thought": "Gemini quyết định gọi công cụ 'send_interview_invite' với tham số: {\"candidate_id\": \"UV2026002\", \"datetime_str\": \"10:00 21/09/2026\", \"interviewer_name\": \"Ms. Nguyễn Thu Hà\"}",
     "tool_name": "send_interview_invite",
     "arguments": {
-      "datetime_str": "10:00 21/09/2026",
       "candidate_id": "UV2026002",
+      "datetime_str": "10:00 21/09/2026",
       "interviewer_name": "Ms. Nguyễn Thu Hà"
     },
     "observation": {
@@ -134,7 +134,7 @@
       "channel": "Email + SMS",
       "message": "Đã gửi thư mời phỏng vấn thành công tới ứng viên UV2026002 vào lúc 10:00 21/09/2026, người phỏng vấn: Ms. Nguyễn Thu Hà."
     },
-    "latency_ms": 1190.24,
+    "latency_ms": 2764.77,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -142,8 +142,8 @@
     "query": "Hãy tra cứu tiêu chí tuyển dụng của vị trí JD-DS-002, sau đó gửi thư mời phỏng vấn cho ứng viên UV2026002 vào lúc 10:00 21/09/2026 với đúng Hiring Manager phụ trách vị trí đó.",
     "action_type": "FINAL_ANSWER",
     "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
-    "output": "Tiêu chí tuyển dụng cho vị trí **Chuyên viên Phân tích Dữ liệu (Data Analyst)** (Mã: JD-DS-002) như sau:\n\n*   **Bộ phận:** Khối Dữ liệu & Phân tích - VinFast\n*   **Cấp bậc:** Junior\n*   **Số năm kinh nghiệm tối thiểu:** 1 năm\n*   **Bằng cấp:** Tốt nghiệp Đại học chuyên ngành Toán tin / Kinh tế / CNTT\n*   **Kỹ năng yêu cầu:** SQL, Python (Pandas), Power BI, Thống kê ứng dụng\n*   **Dải lương:** 15.000.000 - 25.000.000 VNĐ\n*   **Số lượng cần tuyển:** 2\n*   **Hiring Manager:** Ms. Nguyễn Thu Hà\n\nTôi đã gửi thư mời phỏng vấn thành công cho ứng viên **UV2026002** với thông tin chi tiết như sau:\n*   **Thời gian:** 10:00 ngày 21/09/2026\n*   **Người phỏng vấn:** Ms. Nguyễn Thu Hà\n*   **Mã thư mời:** INV-UV2026002-2026",
-    "latency_ms": 5165.43,
+    "output": "Thông tin chi tiết về vị trí **JD-DS-002 (Chuyên viên Phân tích Dữ liệu - Data Analyst)** như sau:\n\n*   **Bộ phận:** Khối Dữ liệu & Phân tích - VinFast\n*   **Cấp bậc:** Junior\n*   **Yêu cầu bằng cấp:** Tốt nghiệp Đại học chuyên ngành Toán tin / Kinh tế / CNTT\n*   **Số năm kinh nghiệm:** Tối thiểu 1 năm\n*   **Kỹ năng yêu cầu:** SQL, Python (Pandas), Power BI, Thống kê ứng dụng\n*   **Dải lương:** 15.000.000 - 25.000.000 VNĐ\n*   **Số lượng cần tuyển:** 2\n*   **Hiring Manager:** Ms. Nguyễn Thu Hà\n\nTôi đã gửi thư mời phỏng vấn thành công cho ứng viên **UV2026002** với thông tin cụ thể như sau:\n*   **Thời gian:** 10:00 ngày 21/09/2026\n*   **Người phỏng vấn:** Ms. Nguyễn Thu Hà\n*   **Mã thư mời:** INV-UV2026002-2026",
+    "latency_ms": 4160.2,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -159,7 +159,7 @@
       "status": "NOT_FOUND",
       "message": "Không tìm thấy tin tuyển dụng có mã 'JD-XX-999' trong hệ thống. Các mã đang mở: JD-AI-001, JD-DS-002, JD-HR-003."
     },
-    "latency_ms": 2799.27,
+    "latency_ms": 3349.7,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   },
   {
@@ -167,8 +167,8 @@
     "query": "Tra cứu giúp tôi tiêu chí tuyển dụng của vị trí có mã JD-XX-999.",
     "action_type": "FINAL_ANSWER",
     "thought": "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).",
-    "output": "Rất tiếc, hiện tại hệ thống không tìm thấy tin tuyển dụng nào có mã **JD-XX-999**.\n\nCác vị trí đang mở hiện nay bao gồm:\n*   **JD-AI-001**\n*   **JD-DS-002**\n*   **JD-HR-003**\n\nBạn vui lòng kiểm tra lại mã tin tuyển dụng hoặc cho tôi biết nếu bạn muốn tra cứu thông tin của một trong các mã trên nhé!",
-    "latency_ms": 4356.73,
+    "output": "Rất tiếc, hiện tại hệ thống không tìm thấy tin tuyển dụng nào có mã **JD-XX-999**.\n\nCác mã tin tuyển dụng đang mở hiện nay là:\n*   **JD-AI-001**\n*   **JD-DS-002**\n*   **JD-HR-003**\n\nBạn vui lòng kiểm tra lại mã tin hoặc cho tôi biết nếu bạn muốn tra cứu thông tin của một trong các mã đang mở trên nhé!",
+    "latency_ms": 4377.79,
     "llm_source": "gemini:gemini-3.1-flash-lite"
   }
 ]

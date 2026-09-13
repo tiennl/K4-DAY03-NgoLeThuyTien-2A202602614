@@ -1,0 +1,469 @@
+<title>Recruitment Trace Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   This page deliberately composites two fixed surfaces — a light
+   "paper" panel (what the HR user sees) and a dark "console" panel
+   (what the ReAct loop is actually doing). That duality is the
+   content, not a light/dark theme toggle, so the palette is fixed
+   and painted explicitly rather than following the viewer's OS
+   theme (per the single-committed-visual-world allowance).
+   ============================================================ */
+:root{
+  --frame:      #15130F;  /* outer bezel the two panels sit on */
+  --paper:      #EFF1E9;  /* chat panel surface */
+  --paper-2:    #E3E6DA;  /* chips, input-like surfaces on paper */
+  --paper-line: #D2D6C6;
+  --ink:        #191D16;  /* primary text on paper */
+  --ink-muted:  #57604F;  /* secondary text on paper */
+
+  --console:    #171C15;  /* trace panel surface */
+  --console-2:  #1F2519;  /* step cards on console */
+  --console-line:#333B2A;
+  --on-console:       #E8ECE1;
+  --on-console-muted: #8D9782;
+
+  --accent:      #C1832C; /* brass — on paper */
+  --accent-dark: #E3A94E; /* brass — on console (brighter for contrast) */
+  --accent-soft: #F1E2C4;
+
+  --good:  #4C8B63;
+  --good-dark: #7FBE95;
+  --bad:   #BE5136;
+  --bad-dark: #E38468;
+
+  --radius-paper: 16px;
+  --radius-console: 8px;
+  --ease: cubic-bezier(.16,.8,.32,1);
+}
+
+*{box-sizing:border-box;}
+html{background:var(--frame);}
+body{
+  background:var(--frame);
+  color:var(--ink);
+  font-family:'Be Vietnam Pro', ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  padding-inline:16px;
+  padding-block:28px 40px;
+  display:flex;
+  justify-content:center;
+}
+.wrap{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:20px;}
+
+h1,h2,h3{font-family:'Fraunces', Georgia, 'Times New Roman', serif;font-weight:600;text-wrap:balance;margin:0;}
+
+/* ---------------- topbar ---------------- */
+.topbar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;
+  padding:18px 22px;background:var(--paper);border-radius:var(--radius-paper);
+  border:1px solid var(--paper-line);
+}
+.brand{display:flex;align-items:center;gap:12px;flex:1 1 260px;min-width:0;}
+.brand-mark{
+  flex:none;width:38px;height:38px;border-radius:10px;background:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+.brand-mark svg{width:20px;height:20px;stroke:var(--accent-soft);}
+.wordmark{font-size:1.28rem;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wordmark small{display:block;font-family:'Be Vietnam Pro',sans-serif;font-weight:500;font-size:.72rem;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);}
+.status-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 10px 6px 8px;border-radius:999px;
+  background:var(--paper-2);border:1px solid var(--paper-line);
+  font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;color:var(--ink);
+  white-space:nowrap;
+}
+.pill svg{width:13px;height:13px;flex:none;stroke:var(--ink-muted);}
+.pill .dim{color:var(--ink-muted);}
+.pill--live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--good);
+  box-shadow:0 0 0 2px var(--paper);flex:none;}
+
+/* ---------------- stage / panels ---------------- */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:16px;align-items:start;}
+@media (max-width:900px){.stage{grid-template-columns:1fr;}}
+
+.panel{border-radius:var(--radius-paper);padding:20px;min-height:0;display:flex;flex-direction:column;gap:16px;}
+.panel--chat{background:var(--paper);border:1px solid var(--paper-line);}
+.panel--trace{background:var(--console);border:1px solid var(--console-line);border-radius:var(--radius-console);}
+
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.panel-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 8px;border-radius:999px;
+}
+.panel--chat .panel-kicker{background:var(--paper-2);color:var(--ink-muted);}
+.panel--trace .panel-kicker{background:var(--console-2);color:var(--on-console-muted);border:1px solid var(--console-line);}
+.panel--chat h2{font-size:1.15rem;color:var(--ink);}
+.panel--trace h2{font-size:1.15rem;color:var(--on-console);font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:-.01em;}
+.trace-meta{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--on-console-muted);font-weight:400;font-variant-numeric:tabular-nums;}
+
+/* ---------------- query chips ---------------- */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{
+  font:inherit;font-size:.82rem;font-weight:500;color:var(--ink);
+  background:var(--paper-2);border:1px solid var(--paper-line);border-radius:10px;
+  padding:8px 12px;cursor:pointer;transition:background .18s var(--ease),border-color .18s var(--ease),transform .12s var(--ease);
+  min-height:44px;display:inline-flex;align-items:center;gap:8px;
+}
+.chip:hover{border-color:var(--accent);}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper);}
+.chip .tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);}
+.chip[aria-pressed="true"] .tag{color:var(--accent-dark);}
+
+/* ---------------- chat thread ---------------- */
+.chat-thread{display:flex;flex-direction:column;gap:12px;flex:1;}
+.bubble{max-width:92%;padding:12px 15px;border-radius:14px;font-size:.95rem;line-height:1.55;}
+.bubble p{margin:0 0 .6em 0;}
+.bubble p:last-child{margin-bottom:0;}
+.bubble strong{color:var(--ink);}
+.bubble--user{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:4px;}
+.bubble--assistant{align-self:flex-start;background:var(--paper-2);color:var(--ink);border:1px solid var(--paper-line);
+  border-bottom-left-radius:4px;}
+.bubble--typing{display:inline-flex;gap:5px;align-items:center;padding:14px 16px;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ink-muted);animation:pulse 1.1s ease-in-out infinite;}
+.dot:nth-child(2){animation-delay:.15s;}
+.dot:nth-child(3){animation-delay:.3s;}
+@keyframes pulse{0%,80%,100%{opacity:.25;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+.bubble-foot{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--ink-muted);
+  align-self:flex-start;padding-left:4px;font-variant-numeric:tabular-nums;}
+
+/* ---------------- trace steps ---------------- */
+.trace-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;flex:1;}
+.trace-step{
+  background:var(--console-2);border:1px solid var(--console-line);border-radius:var(--radius-console);
+  padding:13px 14px;opacity:0;transform:translateY(6px);transition:opacity .32s var(--ease),transform .32s var(--ease);
+}
+.trace-step.show{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){.trace-step{transition:none;}}
+
+.step-row1{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
+.step-thought{display:flex;align-items:center;gap:7px;color:var(--on-console-muted);font-size:.82rem;min-width:0;}
+.step-thought svg{width:14px;height:14px;stroke:var(--on-console-muted);flex:none;}
+.step-thought span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.step-latency{display:flex;align-items:center;gap:8px;flex:none;}
+.latency-track{width:64px;height:5px;border-radius:4px;background:var(--console-line);overflow:hidden;}
+.latency-fill{height:100%;border-radius:4px;background:var(--accent-dark);width:0%;transition:width .5s var(--ease);}
+.latency-label{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--on-console-muted);
+  font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+.step-block{border-radius:6px;background:#141810;border:1px solid var(--console-line);padding:10px 11px;}
+.step-block + .step-block{margin-top:8px;}
+.block-label{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:.66rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--on-console-muted);margin-bottom:6px;}
+.block-label svg{width:12px;height:12px;stroke:currentColor;}
+.block-label.is-action{color:var(--accent-dark);}
+.block-label.is-final{color:var(--good-dark);}
+
+.tool-call{font-family:'JetBrains Mono',monospace;font-size:.84rem;color:var(--on-console);}
+.tool-call .fn{color:var(--accent-dark);font-weight:600;}
+.tool-call .arg-key{color:var(--on-console-muted);}
+
+.code{
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.6;color:var(--on-console-muted);
+  margin:0;overflow-x:auto;white-space:pre;
+}
+.code .k{color:var(--on-console-muted);}
+.code .v{color:var(--on-console);}
+.code .status-good{color:var(--good-dark);font-weight:600;}
+.code .status-bad{color:var(--bad-dark);font-weight:600;}
+
+.final-answer{font-size:.88rem;line-height:1.6;color:var(--on-console);}
+.final-answer p{margin:0 0 .55em 0;}
+.final-answer p:last-child{margin-bottom:0;}
+.final-answer strong{color:var(--accent-dark);}
+
+/* ---------------- footer ---------------- */
+.foot{padding:14px 22px;color:var(--on-console-muted);background:var(--console);border:1px solid var(--console-line);
+  border-radius:var(--radius-console);font-size:.82rem;line-height:1.6;}
+.foot code{font-family:'JetBrains Mono',monospace;background:var(--console-2);padding:1px 6px;border-radius:5px;color:var(--on-console);}
+.foot a{color:var(--accent-dark);text-decoration:underline;text-decoration-color:var(--console-line);}
+
+:focus-visible{outline:2px solid var(--accent-dark);outline-offset:2px;}
+</style>
+
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 6h11a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H9l-4 3v-3a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3z"/>
+        </svg>
+      </span>
+      <h1 class="wordmark">Recruitment Trace Console<small>Waterfall trace demo · Bài Lab 3</small></h1>
+    </div>
+    <div class="status-pills">
+      <span class="pill pill--live">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="3" width="16" height="7" rx="1.5"/><rect x="4" y="14" width="16" height="7" rx="1.5"/><circle cx="7.5" cy="6.5" r=".6" fill="currentColor" stroke="none"/><circle cx="7.5" cy="17.5" r=".6" fill="currentColor" stroke="none"/></svg>
+        vingroup-recruitment-mcp-server <span class="dim">v2026.1.0</span>
+      </span>
+      <span class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg>
+        gemini-3.1-flash-lite
+      </span>
+      <span class="pill"><span class="dim">2 tools ·</span> job_requirements_query, send_interview_invite</span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="panel panel--chat" aria-label="Cuộc trò chuyện với trợ lý tuyển dụng">
+      <div class="panel-head">
+        <div>
+          <span class="panel-kicker">Người dùng thấy</span>
+          <h2 style="margin-top:8px;">Cuộc trò chuyện</h2>
+        </div>
+      </div>
+      <div class="chip-row" role="group" aria-label="Chọn một test case để xem lại" id="chipRow"></div>
+      <div class="chat-thread" id="chatThread" aria-live="polite"></div>
+    </section>
+
+    <section class="panel panel--trace" aria-label="Waterfall trace của vòng lặp ReAct">
+      <div class="panel-head">
+        <div>
+          <span class="panel-kicker">Máy nhìn thấy</span>
+          <h2 style="margin-top:8px;">Waterfall Trace</h2>
+        </div>
+        <span class="trace-meta" id="traceMeta"></span>
+      </div>
+      <ol class="trace-list" id="traceList"></ol>
+    </section>
+  </main>
+
+  <footer class="foot">
+    Dữ liệu trace trích nguyên văn từ <code>docs/trace_waterfall.json</code> — chạy thật trên Gemini API
+    (<code>gemini-3.1-flash-lite</code>) qua MCP Server tuân thủ JSON-RPC 2.0 (<code>src/mcp_server.py</code>).
+    Chọn một test case ở panel bên trái để phát lại đúng chuỗi Thought → Action → Observation → Final Answer đã ghi nhận.
+    Bài Lab 3 · K4-DAY03-NgoLeThuyTien-2A202602614 · VinUni AI Course.
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   Real trace data — transcribed verbatim from docs/trace_waterfall.json
+   (Gemini 3.1 Flash Lite run, MCP server vingroup-recruitment-mcp-server v2026.1.0)
+   ============================================================ */
+const CONVERSATIONS = [
+  {
+    id: "tc01", tag: "TC01", label: "Câu hỏi chung", complexity: "Thấp",
+    query: "Chào bạn, quy trình tuyển dụng tại Tập đoàn VinGroup thường gồm những vòng nào?",
+    steps: [
+      { type: "final", thought: "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).", latency: 3449.49,
+        output: "Quy trình tuyển dụng tại VinGroup thường gồm: **Sàng lọc hồ sơ (CV Screening)** → **Phỏng vấn sơ bộ** với HR → **Phỏng vấn chuyên môn** với Hiring Manager → **Kiểm tra năng lực** (nếu có) → **Phỏng vấn cuối cùng** (vị trí cấp cao) → **Thông báo kết quả & đàm phán lương** → **Tiếp nhận & hội nhập**.\n\nNếu bạn quan tâm một vị trí cụ thể, hãy cho tôi mã tin tuyển dụng (job_code) để tôi tra cứu chi tiết." }
+    ]
+  },
+  {
+    id: "tc02", tag: "TC02", label: "Tra cứu 1 tool", complexity: "Trung bình",
+    query: "Cho tôi xem tiêu chí tuyển dụng chi tiết của vị trí có mã JD-AI-001.",
+    steps: [
+      { type: "tool", thought: "Gemini quyết định gọi công cụ 'job_requirements_query' với tham số: {\"job_code\": \"JD-AI-001\"}", latency: 7871.68,
+        tool: "job_requirements_query", args: { job_code: "JD-AI-001" },
+        observation: { status: "SUCCESS", job_code: "JD-AI-001", data: {
+          job_title: "Kỹ sư Trí tuệ Nhân tạo (AI Engineer)", department: "Khối Công nghệ AI - VinAI", level: "Middle",
+          required_skills: ["Python","PyTorch","Computer Vision","MLOps cơ bản"], min_experience_years: 2,
+          salary_range: "25.000.000 - 40.000.000 VNĐ", headcount: 3, status: "Đang tuyển", hiring_manager: "TS. Trần Minh Quang"
+        } } },
+      { type: "final", thought: "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).", latency: 1938.26,
+        output: "**Kỹ sư Trí tuệ Nhân tạo (AI Engineer) — JD-AI-001**\nKhối Công nghệ AI - VinAI · Cấp Middle · 3 chỗ trống\nKinh nghiệm ≥ 2 năm · Python, PyTorch, Computer Vision, MLOps cơ bản\nLương 25.000.000 - 40.000.000 VNĐ · Hiring Manager: **TS. Trần Minh Quang**" }
+    ]
+  },
+  {
+    id: "tc03", tag: "TC03", label: "Hành động 1 tool", complexity: "Trung bình",
+    query: "Hãy gửi thư mời phỏng vấn cho ứng viên UV2026003 vào lúc 14:00 22/09/2026.",
+    steps: [
+      { type: "tool", thought: "Gemini quyết định gọi công cụ 'send_interview_invite' với tham số: {\"datetime_str\": \"14:00 22/09/2026\", \"candidate_id\": \"UV2026003\"}", latency: 3303.76,
+        tool: "send_interview_invite", args: { candidate_id: "UV2026003", datetime_str: "14:00 22/09/2026" },
+        observation: { status: "SUCCESS", invite_id: "INV-UV2026003-2026", candidate_id: "UV2026003",
+          interview_datetime: "14:00 22/09/2026", interviewer: "Hội đồng Tuyển dụng VinGroup", channel: "Email + SMS" } },
+      { type: "final", thought: "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).", latency: 4571.61,
+        output: "Thư mời phỏng vấn cho ứng viên **UV2026003** đã được gửi thành công.\nThời gian: 14:00 ngày 22/09/2026 · Người phỏng vấn: Hội đồng Tuyển dụng VinGroup · Mã thư mời: INV-UV2026003-2026." }
+    ]
+  },
+  {
+    id: "tc04", tag: "TC04", label: "Suy luận đa bước", complexity: "Cao", featured: true,
+    query: "Hãy tra cứu tiêu chí tuyển dụng của vị trí JD-DS-002, sau đó gửi thư mời phỏng vấn cho ứng viên UV2026002 vào lúc 10:00 21/09/2026 với đúng Hiring Manager phụ trách vị trí đó.",
+    steps: [
+      { type: "tool", thought: "Gemini quyết định gọi công cụ 'job_requirements_query' với tham số: {\"job_code\": \"JD-DS-002\"}", latency: 3788.64,
+        tool: "job_requirements_query", args: { job_code: "JD-DS-002" },
+        observation: { status: "SUCCESS", job_code: "JD-DS-002", data: {
+          job_title: "Chuyên viên Phân tích Dữ liệu (Data Analyst)", department: "Khối Dữ liệu & Phân tích - VinFast", level: "Junior",
+          required_skills: ["SQL","Python (Pandas)","Power BI","Thống kê ứng dụng"], min_experience_years: 1,
+          salary_range: "15.000.000 - 25.000.000 VNĐ", headcount: 2, status: "Đang tuyển", hiring_manager: "Ms. Nguyễn Thu Hà"
+        } } },
+      { type: "tool", thought: "Gemini quyết định gọi công cụ 'send_interview_invite' với tham số: {\"interviewer_name\": \"Ms. Nguyễn Thu Hà\", \"datetime_str\": \"10:00 21/09/2026\", \"candidate_id\": \"UV2026002\"}", latency: 3852.14,
+        tool: "send_interview_invite", args: { candidate_id: "UV2026002", datetime_str: "10:00 21/09/2026", interviewer_name: "Ms. Nguyễn Thu Hà" },
+        observation: { status: "SUCCESS", invite_id: "INV-UV2026002-2026", candidate_id: "UV2026002",
+          interview_datetime: "10:00 21/09/2026", interviewer: "Ms. Nguyễn Thu Hà", channel: "Email + SMS" },
+        handoff: "hiring_manager → interviewer_name" },
+      { type: "final", thought: "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).", latency: 4326.28,
+        output: "**JD-DS-002 — Chuyên viên Phân tích Dữ liệu (Data Analyst)**: Khối Dữ liệu & Phân tích - VinFast · Junior · ≥1 năm KN · SQL, Python (Pandas), Power BI · Lương 15-25tr · Hiring Manager: **Ms. Nguyễn Thu Hà**.\n\nĐã gửi thư mời phỏng vấn cho ứng viên **UV2026002**: 10:00 ngày 21/09/2026 với **Ms. Nguyễn Thu Hà** · Mã thư mời: INV-UV2026002-2026." }
+    ]
+  },
+  {
+    id: "tc05", tag: "TC05", label: "Trường hợp biên", complexity: "Trung bình",
+    query: "Tra cứu giúp tôi tiêu chí tuyển dụng của vị trí có mã JD-XX-999.",
+    steps: [
+      { type: "tool", thought: "Gemini quyết định gọi công cụ 'job_requirements_query' với tham số: {\"job_code\": \"JD-XX-999\"}", latency: 3394.50,
+        tool: "job_requirements_query", args: { job_code: "JD-XX-999" },
+        observation: { status: "NOT_FOUND", message: "Không tìm thấy tin tuyển dụng có mã 'JD-XX-999'. Các mã đang mở: JD-AI-001, JD-DS-002, JD-HR-003." } },
+      { type: "final", thought: "Gemini phản hồi trực tiếp bằng văn bản (không cần gọi công cụ).", latency: 4362.94,
+        output: "Rất tiếc, tôi không tìm thấy thông tin tuyển dụng cho mã **JD-XX-999**.\n\nHiện đang mở: **JD-AI-001**, **JD-DS-002**, **JD-HR-003**. Bạn muốn tôi tra cứu một trong các mã này không?" }
+    ]
+  }
+];
+
+const ICON = {
+  thought: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>',
+  action: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>',
+  observation: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.4"/></svg>',
+  final: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9 18l11-13"/></svg>'
+};
+
+const chatThread = document.getElementById("chatThread");
+const traceList  = document.getElementById("traceList");
+const traceMeta  = document.getElementById("traceMeta");
+const chipRow    = document.getElementById("chipRow");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function esc(s){
+  return String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+}
+function renderRich(text){
+  // Static, author-controlled content only: bold (**x**) + paragraph breaks.
+  return esc(text).split(/\n\n+/).map(p =>
+    "<p>" + p.replace(/\n/g, "<br>").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>") + "</p>"
+  ).join("");
+}
+function formatEnvelope(step){
+  const envelope = { jsonrpc: "2.0", server: "vingroup-recruitment-mcp-server", tool: step.tool, result: step.observation };
+  let json = esc(JSON.stringify(envelope, null, 2));
+  json = json.replace(/"SUCCESS"/, '<span class="status-good">"SUCCESS"</span>');
+  json = json.replace(/"NOT_FOUND"/, '<span class="status-bad">"NOT_FOUND"</span>');
+  json = json.replace(/^(\s*)"([a-zA-Z_]+)":/gm, '$1<span class="k">"$2"</span>:');
+  return json;
+}
+function formatArgs(args){
+  return Object.entries(args).map(([k,v]) =>
+    `<span class="arg-key">${esc(k)}</span>=<span class="v">"${esc(v)}"</span>`
+  ).join(", ");
+}
+
+function buildChips(){
+  CONVERSATIONS.forEach(conv => {
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.type = "button";
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML = `<span class="tag">${conv.tag}</span> ${esc(conv.label)}`;
+    btn.addEventListener("click", () => selectConversation(conv.id));
+    btn.dataset.id = conv.id;
+    chipRow.appendChild(btn);
+  });
+}
+
+let activeTimers = [];
+function clearTimers(){ activeTimers.forEach(clearTimeout); activeTimers = []; }
+
+function selectConversation(id){
+  clearTimers();
+  const conv = CONVERSATIONS.find(c => c.id === id);
+  [...chipRow.children].forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === id)));
+
+  const toolCalls = conv.steps.filter(s => s.type === "tool").length;
+  traceMeta.textContent = `${conv.steps.length} bước · ${toolCalls} lượt gọi tool`;
+
+  // --- chat panel: user bubble + typing indicator, final answer revealed last ---
+  chatThread.innerHTML = "";
+  const userBubble = document.createElement("div");
+  userBubble.className = "bubble bubble--user";
+  userBubble.innerHTML = renderRich(conv.query);
+  chatThread.appendChild(userBubble);
+
+  const typing = document.createElement("div");
+  typing.className = "bubble bubble--assistant bubble--typing";
+  typing.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  chatThread.appendChild(typing);
+
+  // --- trace panel: build step cards, revealed with stagger ---
+  traceList.innerHTML = "";
+  const maxLatency = Math.max(...conv.steps.map(s => s.latency));
+  const totalLatency = conv.steps.reduce((sum, s) => sum + s.latency, 0);
+
+  conv.steps.forEach((step, i) => {
+    const li = document.createElement("li");
+    li.className = "trace-step";
+
+    const pct = Math.max(6, Math.round((step.latency / maxLatency) * 100));
+    let inner = `
+      <div class="step-row1">
+        <div class="step-thought">${ICON.thought}<span title="${esc(step.thought)}">${esc(step.thought)}</span></div>
+        <div class="step-latency">
+          <div class="latency-track"><div class="latency-fill" data-pct="${pct}"></div></div>
+          <span class="latency-label">${step.latency.toFixed(0)} ms</span>
+        </div>
+      </div>`;
+
+    if (step.type === "tool") {
+      inner += `
+        <div class="step-block">
+          <div class="block-label is-action">${ICON.action} Action</div>
+          <div class="tool-call"><span class="fn">${esc(step.tool)}</span>(${formatArgs(step.args)})</div>
+        </div>
+        <div class="step-block">
+          <div class="block-label">${ICON.observation} Observation — MCP JSON-RPC 2.0</div>
+          <pre class="code">${formatEnvelope(step)}</pre>
+          ${step.handoff ? `<div class="tool-call" style="margin-top:8px;color:var(--accent-dark);">↳ nạp ngược vào lượt sau: ${esc(step.handoff)}</div>` : ""}
+        </div>`;
+    } else {
+      inner += `
+        <div class="step-block">
+          <div class="block-label is-final">${ICON.final} Final Answer</div>
+          <div class="final-answer">${renderRich(step.output)}</div>
+        </div>`;
+    }
+    li.innerHTML = inner;
+    traceList.appendChild(li);
+  });
+
+  const stepEls = [...traceList.children];
+  const finalStep = conv.steps[conv.steps.length - 1];
+
+  function revealStep(idx){
+    const el = stepEls[idx];
+    el.classList.add("show");
+    const fill = el.querySelector(".latency-fill");
+    requestAnimationFrame(() => { fill.style.width = fill.dataset.pct + "%"; });
+  }
+
+  function finishThread(){
+    typing.remove();
+    const assistantBubble = document.createElement("div");
+    assistantBubble.className = "bubble bubble--assistant";
+    assistantBubble.innerHTML = renderRich(finalStep.output);
+    chatThread.appendChild(assistantBubble);
+    const meta = document.createElement("div");
+    meta.className = "bubble-foot";
+    meta.textContent = `${toolCalls} lượt gọi tool · ${(totalLatency/1000).toFixed(1)}s tổng thời gian · gemini-3.1-flash-lite`;
+    chatThread.appendChild(meta);
+  }
+
+  if (reduceMotion) {
+    stepEls.forEach((_, i) => revealStep(i));
+    finishThread();
+  } else {
+    stepEls.forEach((_, i) => {
+      activeTimers.push(setTimeout(() => revealStep(i), 260 + i * 420));
+    });
+    activeTimers.push(setTimeout(finishThread, 260 + stepEls.length * 420 + 200));
+  }
+}
+
+buildChips();
+const initial = CONVERSATIONS.find(c => c.featured) || CONVERSATIONS[0];
+selectConversation(initial.id);
+</script>
